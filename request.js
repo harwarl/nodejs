@@ -1,6 +1,6 @@
-const https = require('https');
+const { get } = require('https');
 
-const req = https.request('https://www.google.com', (res)=>{
+get('https://www.google.com', (res)=>{
 res
 .on('data', (chunk)=>{
     console.log(`data chunk ${chunk}`);
@@ -12,5 +12,3 @@ res
     console.log('Done');
 })
 });
-
-req.end();
