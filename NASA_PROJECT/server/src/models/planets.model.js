@@ -33,8 +33,12 @@ function readHabitablePlanets() {
         })
     }
 
+function getAllPlanets(){
+    return habitablePlanet;
+}
+
 
 module.exports = {
     readHabitablePlanets,
-    planets: habitablePlanet
+    getAllPlanets
 }
