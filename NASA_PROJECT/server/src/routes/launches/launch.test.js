@@ -2,11 +2,18 @@ const request = require('supertest');
 const app = require('../../app');
 
 describe('Test GET /launches', () => {
-    test('Get launches', async () => {
-        const response = await request(app)
+    test('Get launches', (done) => {
+        request(app)
             .get('/launches')
             .expect(200)
             .expect('Content-Type', /json/)
+            .expect((res)=>{
+                res.body.length = 5;
+            })
+            .end((err, res) =>{
+                if (err) return done(err);
+                return done();
+            })
     })
 })
 
@@ -28,5 +35,13 @@ describe('Test POST /launches', () => {
             .send(completeLaunchData)
             .expect('Content-Type', /json/)
             .expect(201)
+
+
+            const requestDate = new Date(completeLaunchData.launchDate).valueOf();
+            const responseDate = new Date(response.body.launchDate).valueOf();
+
+            // expect(responseDate).toBe(requestDate)
+
+            // expect(response.body).toMatch(launchDataWithoutDate)
     })
 })
