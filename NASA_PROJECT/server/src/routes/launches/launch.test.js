@@ -29,7 +29,8 @@ describe('Test POST /launches', () => {
         "rocket": "explorer - e",
         "target": "moon"
     }
-    test('POST launches should respond with  200 success', async () => {
+
+    test('POST launches should respond with  200 success', async() => {
         const response = await request(app)
             .post('/launches')
             .send(completeLaunchData)
@@ -40,8 +41,6 @@ describe('Test POST /launches', () => {
             const requestDate = new Date(completeLaunchData.launchDate).valueOf();
             const responseDate = new Date(response.body.launchDate).valueOf();
 
-            // expect(responseDate).toBe(requestDate)
-
-            // expect(response.body).toMatch(launchDataWithoutDate)
+            expect(responseDate).toBe(requestDate)
     })
 })
