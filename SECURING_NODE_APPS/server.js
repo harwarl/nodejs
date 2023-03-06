@@ -2,8 +2,11 @@ const https = require('https');
 const fs = require('fs');
 const express = require('express');
 const helmet = require('helmet');
+const PORT = 8000;
 
 const app = express();
+
+app.use(helmet());
 
 app.get('/secret', (req, res, next)=>{
     res.send('The secret is 42!')
@@ -18,6 +21,6 @@ https
     key: fs.readFileSync('key.pem'),
     cert: fs.readFileSync('cert.pem')
 }, app)
-.listen(8000, ()=>{
-    console.log('App is running on port 3000');
+.listen(PORT, ()=>{
+    console.log(`App is running on port ${PORT}`);
 })
