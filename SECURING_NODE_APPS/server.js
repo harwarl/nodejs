@@ -24,14 +24,12 @@ const AUTH_OPTIONS = {
 
 
 passport.use(new Strategy(AUTH_OPTIONS, (accessToken, refreshToken, profile, done) => {
-    console.log(profile);
     done(null, profile);
 }));
 
 //save session to cookie
 passport.serializeUser((user, done)=>{
     //could as well pass in the whole user but that would make the cookie large.
-    
     done(null, user.id); 
 })
 
@@ -39,6 +37,7 @@ passport.deserializeUser((id, done)=>{
     /*
     could use a middle ware here thou
     User.findById(id) then save user to req.user
+    The above statement is not needed. Passport automatically makes req.user available
     */
     done(null, id);
 })
@@ -56,7 +55,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 function checkLoggedIn(req, res, next) {
-    const isLoggedIn = true;
+    console.log(`Current user is :${req.user}`);
+    const isLoggedIn = req.user;
     if (!isLoggedIn) {
         return res.status(401).json({
             error: 'You must log In'
