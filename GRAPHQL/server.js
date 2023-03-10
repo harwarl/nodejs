@@ -1,37 +1,30 @@
 const express = require('express');
 const path = require('path');
-const { buildSchema } = require('graphql');
 const { makeExecutableSchema } = require('@graphql-tools/schema');
 const { loadFilesSync } = require('@graphql-tools/load-files');
-const { graphqlHTTP } = require('express-graphql');
-// const SchemaText = `
-// type Query{
-//     description: String
-//     price: Float
-// }
-// `;
+const { ApolloServer }  = require('apollo-server-express');
 
 const typesArray = loadFilesSync(path.join(__dirname, '**/*.graphql'));
 const resolversArray = loadFilesSync(path.join(__dirname, '**/*.resolver.js'))
 
-const schema = makeExecutableSchema({
-    typeDefs: typesArray,
-    resolvers: resolversArray
-});
+async function startApolloServer(){
+    const app = express();
+    
+    const schema = makeExecutableSchema({
+        typeDefs: typesArray,
+        resolvers: resolversArray
+    });
 
-// const root = {
-//     products: require('./product/product.model').getProducts(),
-//     orders: require('./order/order.model').getOrders()
-// }  Not needed anymore since data has been passed in resolvers
+    const server = new ApolloServer({
+        schema: schema
+    });
 
-const app = express();
+    await server.start();
+    server.applyMiddleware({ app, path:'/graphql'});
+    
+    app.listen(3000, () => {
+        console.log('Running GraphQl server 3000');
+    })
+}
 
-app.use('/graphql', graphqlHTTP({
-    schema: schema,
-    // rootValue: root,
-    graphiql: true
-}))
-
-app.listen(3000, () => {
-    console.log('Running GraphQl server 3000');
-})
+startApolloServer();
